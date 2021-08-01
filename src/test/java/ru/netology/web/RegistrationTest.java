@@ -15,9 +15,9 @@ class RegistrationTest {
     LocalDate dateOfDelivery = LocalDate.now().plusDays(3);
 
     @Test
-    void shouldRegisterByAccountNumberDOMModification() {
+    void shouldRegister() {
         open("http://localhost:7777");
-        $("[data-test-id=city] input").setValue("Моск");
+        $("[data-test-id=city] input").setValue("Москва");
         $("[data-test-id=date] input").setValue(dateOfDelivery.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
         $("[data-test-id=name] input").setValue("Матюхина Александра");
         $("[data-test-id=phone] input").setValue("+79689111111");
