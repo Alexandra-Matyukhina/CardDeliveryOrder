@@ -1,7 +1,9 @@
 package ru.netology.web;
 
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.Keys;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -10,19 +12,20 @@ import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.*;
 
 class RegistrationTest {
-
-    LocalDate date = LocalDate.now();
-    LocalDate dateOfDelivery = LocalDate.now().plusDays(3);
+    String generateDate(int daysToAdd) {
+        return LocalDate.now().plusDays(daysToAdd).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+    }
 
     @Test
     void shouldRegister() {
         open("http://localhost:7777");
+        $("[data-test-id=date] input").sendKeys(Keys.CONTROL, "a", Keys.DELETE);
         $("[data-test-id=city] input").setValue("Москва");
-        $("[data-test-id=date] input").setValue(dateOfDelivery.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+        $("[data-test-id=date] input").setValue(generateDate(3));
         $("[data-test-id=name] input").setValue("Матюхина Александра");
         $("[data-test-id=phone] input").setValue("+79689111111");
         $("[data-test-id=agreement]").click();
         $$("button").find(exactText("Забронировать")).click();
-        $("[data-test-id=notification]").waitUntil(visible, 15000).shouldHave(exactText("Успешно! Встреча успешно забронирована на 04.08.2021"));
+        $("[data-test-id=notification]").shouldBe(visible, Duration.ofSeconds(15)).shouldHave(exactText("Успешно! Встреча успешно забронирована на " + generateDate(3)));
     }
 }
